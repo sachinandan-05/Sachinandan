@@ -7,6 +7,7 @@ import { MdEmail, MdMenu, MdClose, MdKeyboardArrowDown } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import QuickAccessModal from "./QuickAccessModal";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -330,18 +331,11 @@ export default function Navigation() {
         )}
       </AnimatePresence>
 
-      {/* Quick Access Modal Placeholder */}
-      {quickAccessOpen && (
-        <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={() => setQuickAccessOpen(false)}
-        >
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl p-8 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Quick Access</h3>
-            <p className="text-gray-400">Quick access functionality goes here...</p>
-          </div>
-        </div>
-      )}
+      {/* Quick Access Modal */}
+      <QuickAccessModal 
+        isOpen={quickAccessOpen} 
+        onClose={() => setQuickAccessOpen(false)} 
+      />
     </>
   );
 }

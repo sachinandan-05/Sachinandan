@@ -1,0 +1,221 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { FaLinkedin, FaTwitter, FaGithub, FaSkype, FaUsers } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
+export default function Contact() {
+  const contactDetails = [
+    { label: "Address", value: "New Delhi, Delhi, India" },
+    { label: "Timezone", value: "GMT+5:30" },
+    { 
+      label: "E-mail Official", 
+      value: "sachinandan.priv05@gmail.com",
+      isEmail: true 
+    },
+  ];
+
+  const socialMedia = [
+    { 
+      platform: "LinkedIn", 
+      url: "https://www.linkedin.com/in/sachinandan-yadav-660115243/",
+      icon: FaLinkedin 
+    },
+    { 
+      platform: "Twitter", 
+      url: "https://x.com/sachinandan_05",
+      icon: FaTwitter 
+    },
+    { 
+      platform: "Github", 
+      url: "https://github.com/sachinandan-05",
+      icon: FaGithub 
+    },
+
+  ];
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section id="contact" className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white py-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid lg:grid-cols-[1fr_300px] gap-12">
+          {/* Main Content */}
+          <div className="space-y-16">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <p className="text-blue-400 text-sm font-medium mb-4 uppercase tracking-wider">Work</p>
+              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-6">Contact</h1>
+              <p className="text-gray-400 text-lg max-w-2xl">
+                Get in touch with me anytime, through social media, e-mail, or schedule 30min call with me.
+              </p>
+            </motion.div>
+
+            {/* Notice Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white/5 border-l-4 border-yellow-500/50 p-6 rounded-r-lg"
+            >
+              <p className="text-gray-300 mb-3">
+                Just a friendly reminder that the information provided here is for{" "}
+                <span className="font-bold text-white">business purposes only</span>. If you have any questions, 
+                feel free to chat with me directly on my social media.
+              </p>
+              <p className="text-gray-400 text-sm">
+                I appreciate your understanding in using this responsibly.
+              </p>
+            </motion.div>
+
+            {/* Contact Details Section */}
+            <motion.div
+              id="contact-details"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="space-y-6"
+            >
+              <h2 className="text-4xl font-bold">Contact</h2>
+              
+              <div className="overflow-hidden rounded-lg border border-white/10">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-white/5">
+                      <th className="text-left px-6 py-4 font-semibold text-gray-300">Contact</th>
+                      <th className="text-left px-6 py-4 font-semibold text-gray-300">Detail</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {contactDetails.map((detail, index) => (
+                      <tr 
+                        key={index}
+                        className="border-t border-white/10 hover:bg-white/5 transition-colors"
+                      >
+                        <td className="px-6 py-4 text-gray-400">{detail.label}</td>
+                        <td className="px-6 py-4">
+                          {detail.isEmail ? (
+                            <a 
+                              href={`mailto:${detail.value}`}
+                              className="text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2"
+                            >
+                              <MdEmail size={18} />
+                              {detail.value}
+                            </a>
+                          ) : (
+                            <span className="text-white">{detail.value}</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-gray-400 mt-6">
+                If you need any further information, such as my phone number, please do not hesitate to 
+                send me an email first.
+              </p>
+
+              <button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/50">
+                Schedule a Call
+              </button>
+            </motion.div>
+
+            {/* Social Media Section */}
+            <motion.div
+              id="social-media"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="space-y-6"
+            >
+              <h2 className="text-4xl font-bold">Social Media</h2>
+              
+              <p className="text-gray-400">
+                If you want to find me on social media, just search for{" "}
+                <span className="font-bold text-white">@sachinandan_05</span>. That's my username on 
+                almost all platforms, so it should be easy to find me.
+              </p>
+
+              <p className="text-gray-400">
+                But if you're short on time, I've included some links to the social media platforms I use most 
+                frequently below.
+              </p>
+
+              <div className="overflow-hidden rounded-lg border border-white/10">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-white/5">
+                      <th className="text-left px-6 py-4 font-semibold text-gray-300">Social Media</th>
+                      <th className="text-left px-6 py-4 font-semibold text-gray-300">Profile URL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {socialMedia.map((social, index) => (
+                      <tr 
+                        key={index}
+                        className="border-t border-white/10 hover:bg-white/5 transition-colors"
+                      >
+                        <td className="px-6 py-4 text-gray-400 flex items-center gap-3">
+                          <social.icon size={20} className="text-gray-500" />
+                          {social.platform}
+                        </td>
+                        <td className="px-6 py-4">
+                          <a 
+                            href={social.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-2"
+                          >
+                            {social.url}
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Table of Contents Sidebar */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="hidden lg:block"
+          >
+            <div className="sticky top-24 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4">Table of Contents</h3>
+              <nav className="space-y-3">
+                <button
+                  onClick={() => scrollToSection('contact-details')}
+                  className="block w-full text-left text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  Contact
+                </button>
+                <button
+                  onClick={() => scrollToSection('social-media')}
+                  className="block w-full text-left text-gray-400 hover:text-white transition-colors"
+                >
+                  Social Media
+                </button>
+              </nav>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}

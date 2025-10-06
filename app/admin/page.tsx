@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes, FaSignOutAlt } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import ImageUpload from "@/components/ImageUpload";
 
@@ -34,6 +35,9 @@ interface TIL {
   content: string;
   category: string;
   tags: string[];
+  codeSnippet?: string;
+  codeLanguage?: string;
+  officialDocsUrl?: string;
 }
 
 interface Hero {
@@ -50,6 +54,9 @@ interface Hero {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("projects");
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -59,9 +66,47 @@ export default function AdminDashboard() {
   const [editingItem, setEditingItem] = useState<any>(null);
   const [showForm, setShowForm] = useState(false);
 
+  // Check authentication on mount
   useEffect(() => {
-    fetchData();
-  }, [activeTab]);
+    const verifyAuth = async () => {
+      const token = localStorage.getItem("adminToken");
+      
+      if (!token) {
+        router.push("/admin/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/auth/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem("adminToken");
+          router.push("/admin/login");
+        }
+      } catch (error) {
+        localStorage.removeItem("adminToken");
+        router.push("/admin/login");
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    verifyAuth();
+  }, [router]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [activeTab, isAuthenticated]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -105,6 +150,11 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    router.push("/admin/login");
+  };
+
   const handleSave = async (data: any, type: string, id?: string) => {
     try {
       // Hero always uses PUT method since there's only one hero record
@@ -132,6 +182,23 @@ export default function AdminDashboard() {
     }
   };
 
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+          <p className="text-gray-400">Verifying authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Only render dashboard if authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 py-20">
@@ -139,13 +206,22 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="mb-12 flex justify-between items-start"
         >
-          <h1 className="text-4xl font-bold mb-4 flex items-center gap-3">
-            <MdDashboard className="text-purple-500" />
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-400">Manage your portfolio content</p>
+          <div>
+            <h1 className="text-4xl font-bold mb-4 flex items-center gap-3">
+              <MdDashboard className="text-purple-500" />
+              Admin Dashboard
+            </h1>
+            <p className="text-gray-400">Manage your portfolio content</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-lg flex items-center gap-2 transition-all"
+          >
+            <FaSignOutAlt />
+            Logout
+          </button>
         </motion.div>
 
         {/* Tabs */}
@@ -585,6 +661,9 @@ function TILForm({ til, onSave, onCancel }: any) {
       content: "",
       category: "",
       tags: [],
+      codeSnippet: "",
+      codeLanguage: "",
+      officialDocsUrl: "",
     }
   );
 
@@ -596,29 +675,49 @@ function TILForm({ til, onSave, onCancel }: any) {
       <div className="space-y-4">
         <input
           type="text"
-          placeholder="Title"
+          placeholder="Title (e.g., GitHub Actions - Matrix Strategy)"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500"
         />
         <textarea
-          placeholder="What did you learn today?"
+          placeholder="Description (e.g., Use matrix to run multiple OS or versions in parallel)"
           value={formData.content}
           onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 h-32"
+          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 h-24"
         />
         <input
           type="text"
-          placeholder="Category"
+          placeholder="Category (optional)"
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500"
         />
         <input
           type="text"
-          placeholder="Tags (comma separated)"
+          placeholder="Tags (comma separated, e.g., devops, githubactions)"
           value={formData.tags?.join(", ")}
-          onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(",").map((t: string) => t.trim()) })}
+          onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(",").map((t: string) => t.trim()).filter(Boolean) })}
+          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500"
+        />
+        <textarea
+          placeholder="Code Snippet (optional)"
+          value={formData.codeSnippet}
+          onChange={(e) => setFormData({ ...formData, codeSnippet: e.target.value })}
+          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500 h-40 font-mono text-sm"
+        />
+        <input
+          type="text"
+          placeholder="Code Language (e.g., yaml, python, javascript)"
+          value={formData.codeLanguage}
+          onChange={(e) => setFormData({ ...formData, codeLanguage: e.target.value })}
+          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500"
+        />
+        <input
+          type="url"
+          placeholder="Official Docs URL (optional)"
+          value={formData.officialDocsUrl}
+          onChange={(e) => setFormData({ ...formData, officialDocsUrl: e.target.value })}
           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500"
         />
         <div className="flex gap-4">
@@ -626,7 +725,7 @@ function TILForm({ til, onSave, onCancel }: any) {
             onClick={() => onSave(formData)}
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-semibold flex items-center gap-2 hover:shadow-lg transition-all"
           >
-            <FaSave /> Save
+            <FaSave /> Save TIL
           </button>
           <button
             onClick={onCancel}

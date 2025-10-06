@@ -1,16 +1,33 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import {  FaCodeCompare } from "react-icons/fa6";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { MdEmail, MdMenu, MdClose, MdKeyboardArrowDown } from "react-icons/md";
 import { FiGrid } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import QuickAccessModal from "./QuickAccessModal";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [workDropdown, setWorkDropdown] = useState(false);
   const [skillsDropdown, setSkillsDropdown] = useState(false);
+  const [mobileWorkDropdown, setMobileWorkDropdown] = useState(false);
+  const [quickAccessOpen, setQuickAccessOpen] = useState(false);
+
+  // Keyboard shortcut for Quick Access (Cmd/Ctrl + K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setQuickAccessOpen(prev => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const navItems = [
     { name: "Projects", href: "/projects" },
@@ -44,15 +61,17 @@ export default function Navigation() {
               className="flex items-center gap-2 text-lg font-bold cursor-pointer"
               whileHover={{ scale: 1.02 }}
             >
-              <span className="text-white font-bold">Sachinandan.</span>
+
+              <FaCodeCompare color="#6710cbff" />
+              <span className="text-white font-bold text-[28px] font-[Poppins]">sachii <p className="inline text-[34px] font-[Poppins] text-[#6710cbff]">.</p></span>
             </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1 ">
             {navItems.map((item) => (
               <Link key={item.name} href={item.href}>
-                <span className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors rounded-md hover:bg-white/5 cursor-pointer inline-block">
+                <span className="px-4 text-[#733eb0ff] py-2 text-sm text-gray-300 hover:text-white transition-colors rounded-md hover:bg-white/5 cursor-pointer inline-block">
                   {item.name}
                 </span>
               </Link>
@@ -91,7 +110,7 @@ export default function Navigation() {
                   >
                     {skillsItems.map((item) => (
                       <Link key={item.name} href={item.href}>
-                        <span className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer">
+                        <span className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-[#733eb0ff]">
                           {item.name}
                         </span>
                       </Link>
@@ -139,20 +158,36 @@ export default function Navigation() {
             </a>
 
             {/* Quick Access Button */}
-            <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-md transition-all">
+            <button 
+              onClick={() => setQuickAccessOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-md transition-all"
+            >
               <FiGrid size={16} />
               Quick Access
-              <kbd className="px-1.5 py-0.5 text-xs bg-black/50 rounded border border-white/10">⌘</kbd>
+              <kbd className="px-1.5 py-0.5 text-xs bg-black/50 rounded border border-white/10">⌘K</kbd>
             </button>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-gray-300 hover:text-white p-2"
-          >
-            {isOpen ? <MdClose size={24} /> : <MdMenu size={24} />}
-          </button>
+          {/* Mobile Right Section */}
+          <div className="lg:hidden flex items-center gap-2">
+            {/* Quick Access Button - Mobile */}
+            <button
+              onClick={() => setQuickAccessOpen(true)}
+              className="p-2.5 bg-[#2a3b4f] hover:bg-[#324152] rounded-lg transition-all"
+              aria-label="Quick Access"
+            >
+              <FiGrid size={20} className="text-gray-300" />
+            </button>
+
+            {/* Hamburger Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-gray-300 hover:text-white"
+              aria-label="Menu"
+            >
+              {isOpen ? <MdClose size={24} /> : <MdMenu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -169,17 +204,51 @@ export default function Navigation() {
                   <Link key={item.name} href={item.href}>
                     <span
                       onClick={() => setIsOpen(false)}
-                      className="block text-gray-300 hover:text-white hover:bg-white/5 transition-colors py-2 px-3 rounded-md cursor-pointer"
+                      className="block text-gray-300 hover:text-white hover:bg-white/5 transition-colors py-3 px-3 rounded-md cursor-pointer"
                     >
                       {item.name}
                     </span>
                   </Link>
                 ))}
 
-                {/* Work Items */}
-                <div className="pt-2">
-                  <div className="text-xs text-gray-500 uppercase tracking-wider px-3 py-2">Work</div>
+                {/* Work Dropdown Button */}
+                <div className="pt-1">
+                  <button
+                    onClick={() => setMobileWorkDropdown(!mobileWorkDropdown)}
+                    className="w-full flex items-center justify-between text-gray-300 hover:text-white hover:bg-white/5 transition-colors py-3 px-3 rounded-md"
+                  >
+                    <span>Work</span>
+                    <MdKeyboardArrowDown 
+                      className={`transition-transform duration-200 ${mobileWorkDropdown ? 'rotate-180' : ''}`}
+                      size={20}
+                    />
+                  </button>
                   
+                  {/* Work Dropdown Items */}
+                  <AnimatePresence>
+                    {mobileWorkDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden bg-white/5 rounded-lg mt-2 border border-white/10"
+                      >
+                        {workItems.map((item) => (
+                          <Link key={item.name} href={item.href}>
+                            <span
+                              onClick={() => {
+                                setIsOpen(false);
+                                setMobileWorkDropdown(false);
+                              }}
+                              className="block text-blue-400 hover:text-blue-300 hover:bg-white/5 transition-colors py-3 px-4 cursor-pointer"
+                            >
+                              {item.name}
+                            </span>
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Social Links */}
@@ -212,6 +281,12 @@ export default function Navigation() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Quick Access Modal */}
+      <QuickAccessModal 
+        isOpen={quickAccessOpen} 
+        onClose={() => setQuickAccessOpen(false)} 
+      />
     </motion.nav>
   );
 }

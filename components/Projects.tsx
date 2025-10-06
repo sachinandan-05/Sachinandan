@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FaGithub as Github } from "react-icons/fa";
 import { FiExternalLink as ExternalLink } from "react-icons/fi";
 import { useState, useEffect } from "react";
+import ProjectReactions from "./ProjectReactions";
 
 interface Project {
   _id: string;
@@ -19,18 +20,30 @@ interface Project {
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch projects from API
+  // Fetch projects from API with caching
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('/api/projects');
+        const response = await fetch('/api/projects', {
+          cache: 'force-cache', // Use standard cache option for client-side
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         if (data.success) {
           setProjects(data.data);
+          setError(null);
+        } else {
+          setError(data.error || 'Failed to load projects');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching projects:', error);
+        setError(error.message || 'Failed to connect to server');
       } finally {
         setLoading(false);
       }
@@ -65,6 +78,28 @@ export default function Projects() {
         <div className="text-center py-20">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
           <p className="mt-4 text-gray-400">Loading projects...</p>
+        </div>
+      ) : error ? (
+        <div className="text-center py-20">
+          <div className="mx-auto max-w-2xl bg-red-500/10 border border-red-500/30 rounded-xl p-8">
+            <h3 className="text-2xl font-bold text-red-400 mb-4">⚠️ Connection Error</h3>
+            <p className="text-gray-300 mb-4">{error}</p>
+            <div className="bg-black/30 rounded-lg p-4 text-left text-sm">
+              <p className="text-yellow-400 font-semibold mb-2">💡 Quick Fix:</p>
+              <ol className="text-gray-300 space-y-1 list-decimal list-inside">
+                <li>Go to <a href="https://cloud.mongodb.com" target="_blank" rel="noopener" className="text-blue-400 hover:underline">MongoDB Atlas</a></li>
+                <li>Click "Network Access" in the left sidebar</li>
+                <li>Click "Add IP Address" → "Allow Access from Anywhere"</li>
+                <li>Refresh this page</li>
+              </ol>
+            </div>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:shadow-lg transition-all"
+            >
+              Try Again
+            </button>
+          </div>
         </div>
       ) : projects.length === 0 ? (
         <div className="text-center py-20">
@@ -146,6 +181,11 @@ export default function Projects() {
                       <span>Live Demo</span>
                     </a>
                   )}
+                </div>
+
+                {/* Reactions */}
+                <div className="pt-4 border-t border-white/10">
+                  <ProjectReactions projectId={project._id} />
                 </div>
               </div>
             </motion.div>

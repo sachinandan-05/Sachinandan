@@ -5,6 +5,9 @@ const TILSchema = new mongoose.Schema({
   content: { type: String, required: true },
   category: { type: String },
   tags: [{ type: String }],
+  codeSnippet: { type: String },
+  codeLanguage: { type: String },
+  officialDocsUrl: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

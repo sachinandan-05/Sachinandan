@@ -2,10 +2,8 @@
 
 import { motion } from "framer-motion";
 import Hero from "@/components/Hero";
-import TechStack from "@/components/TechStack";
 import Skills from "@/components/Skills";
 import About from "@/components/About";
-
 import Contact from "@/components/Contact";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";

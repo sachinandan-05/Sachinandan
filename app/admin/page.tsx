@@ -350,7 +350,13 @@ export default function AdminDashboard() {
 }
 
 // Projects List Component
-function ProjectsList({ projects, onEdit, onDelete }: any) {
+interface ProjectsListProps {
+  projects: Project[];
+  onEdit: (project: Project) => void;
+  onDelete: (id: string) => void;
+}
+
+function ProjectsList({ projects, onEdit, onDelete }: ProjectsListProps) {
   return (
     <div className="grid gap-4">
       {projects.map((project: Project) => (
@@ -382,7 +388,7 @@ function ProjectsList({ projects, onEdit, onDelete }: any) {
                 <FaEdit />
               </button>
               <button
-                onClick={() => onDelete(project._id)}
+                onClick={() => project._id && onDelete(project._id)}
                 className="p-2 bg-red-600 rounded hover:bg-red-700 transition-colors"
               >
                 <FaTrash />
@@ -396,7 +402,13 @@ function ProjectsList({ projects, onEdit, onDelete }: any) {
 }
 
 // Blogs List Component
-function BlogsList({ blogs, onEdit, onDelete }: any) {
+interface BlogsListProps {
+  blogs: Blog[];
+  onEdit: (blog: Blog) => void;
+  onDelete: (id: string) => void;
+}
+
+function BlogsList({ blogs, onEdit, onDelete }: BlogsListProps) {
   return (
     <div className="grid gap-4">
       {blogs.map((blog: Blog) => (
@@ -427,7 +439,7 @@ function BlogsList({ blogs, onEdit, onDelete }: any) {
                 <FaEdit />
               </button>
               <button
-                onClick={() => onDelete(blog._id)}
+                onClick={() => blog._id && onDelete(blog._id)}
                 className="p-2 bg-red-600 rounded hover:bg-red-700 transition-colors"
               >
                 <FaTrash />
@@ -441,7 +453,13 @@ function BlogsList({ blogs, onEdit, onDelete }: any) {
 }
 
 // TIL List Component
-function TILList({ tils, onEdit, onDelete }: any) {
+interface TILListProps {
+  tils: TIL[];
+  onEdit: (til: TIL) => void;
+  onDelete: (id: string) => void;
+}
+
+function TILList({ tils, onEdit, onDelete }: TILListProps) {
   return (
     <div className="grid gap-4">
       {tils.map((til: TIL) => (
@@ -467,7 +485,7 @@ function TILList({ tils, onEdit, onDelete }: any) {
                 <FaEdit />
               </button>
               <button
-                onClick={() => onDelete(til._id)}
+                onClick={() => til._id && onDelete(til._id)}
                 className="p-2 bg-red-600 rounded hover:bg-red-700 transition-colors"
               >
                 <FaTrash />
@@ -481,7 +499,13 @@ function TILList({ tils, onEdit, onDelete }: any) {
 }
 
 // Project Form Component
-function ProjectForm({ project, onSave, onCancel }: any) {
+interface ProjectFormProps {
+  project: Project | null;
+  onSave: (data: Project) => Promise<void>;
+  onCancel: () => void;
+}
+
+function ProjectForm({ project, onSave, onCancel }: ProjectFormProps) {
   const [formData, setFormData] = useState(
     project || {
       title: "",
@@ -568,7 +592,13 @@ function ProjectForm({ project, onSave, onCancel }: any) {
 }
 
 // Blog Form Component
-function BlogForm({ blog, onSave, onCancel }: any) {
+interface BlogFormProps {
+  blog: Blog | null;
+  onSave: (data: Blog) => Promise<void>;
+  onCancel: () => void;
+}
+
+function BlogForm({ blog, onSave, onCancel }: BlogFormProps) {
   const [formData, setFormData] = useState(
     blog || {
       title: "",
@@ -654,7 +684,13 @@ function BlogForm({ blog, onSave, onCancel }: any) {
 }
 
 // TIL Form Component
-function TILForm({ til, onSave, onCancel }: any) {
+interface TILFormProps {
+  til: TIL | null;
+  onSave: (data: TIL) => Promise<void>;
+  onCancel: () => void;
+}
+
+function TILForm({ til, onSave, onCancel }: TILFormProps) {
   const [formData, setFormData] = useState(
     til || {
       title: "",
@@ -740,7 +776,12 @@ function TILForm({ til, onSave, onCancel }: any) {
 }
 
 // Hero Form Component
-function HeroForm({ hero, onSave }: any) {
+interface HeroFormProps {
+  hero: Hero | null;
+  onSave: (data: Hero) => Promise<void>;
+}
+
+function HeroForm({ hero, onSave }: HeroFormProps) {
   const [formData, setFormData] = useState(
     hero || {
       name: "Sachinandan Yadav",

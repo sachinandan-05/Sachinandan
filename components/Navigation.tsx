@@ -62,7 +62,7 @@ export default function Navigation() {
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
-                  <span className="text-white text-xl font-bold italic">I</span>
+                  <FaCodeCompare className="text-white text-xl" />
                 </div>
                 <span className="hidden sm:inline text-white font-bold text-[28px] font-[Poppins]">
                   sachii <span className="text-[34px] font-[Poppins] text-[#6710cbff]">.</span>

@@ -9,7 +9,7 @@ const TILSchema = new mongoose.Schema({
   codeLanguage: { type: String },
   officialDocsUrl: { type: String },
   createdAt: { type: Date, default: Date.now },
-  index: { type: Number, required: true, unique: true },
+ 
 });
 
 export default mongoose.models.TIL || mongoose.model('TIL', TILSchema);

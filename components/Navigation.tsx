@@ -87,9 +87,9 @@ export default function Navigation() {
                 onMouseEnter={() => setWorkDropdown(true)}
                 onMouseLeave={() => setWorkDropdown(false)}
               >
-                <button className="px-4 py-2 text-sm bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 transition-colors rounded-full flex items-center gap-1">
+                <button className="px-4 py-2 text-sm bg-blue-600/20 text-blue-400  hover:bg-blue-600/30 transition-colors rounded-full flex items-center gap-1">
                   Work
-                  <MdKeyboardArrowDown className={`transition-transform ${workDropdown ? 'rotate-180' : ''}`} />
+                  <MdKeyboardArrowDown className={`transition-transform ${workDropdown ? 'sm:rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {workDropdown && (

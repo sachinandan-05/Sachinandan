@@ -13,7 +13,7 @@ const ProjectSchema = new mongoose.Schema({
 });
 
 // Add indexes for better query performance
-ProjectSchema.index({ createdAt: -1 });
+
 ProjectSchema.index({ featured: 1 });
 
 export default mongoose.models.Project || mongoose.model('Project', ProjectSchema);

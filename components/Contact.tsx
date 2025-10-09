@@ -39,6 +39,12 @@ export default function Contact() {
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleScheduleCall = () => {
+    // Replace with your actual Calendly link
+    const calendlyUrl = 'https://calendly.com/sachinandan-priv05/30min';
+    window.open(calendlyUrl, '_blank');
+  };
+
   return (
     <section id="contact" className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black text-white py-12 sm:py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -148,8 +154,14 @@ export default function Contact() {
                 send me an email first.
               </p>
 
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/50 text-sm sm:text-base">
-                Schedule a Call
+              <button 
+                onClick={handleScheduleCall}
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/50 text-sm sm:text-base flex items-center gap-2 justify-center sm:justify-start"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v14a2 2 0 002 2z" />
+                </svg>
+                Book a Meeting
               </button>
             </motion.div>
 
